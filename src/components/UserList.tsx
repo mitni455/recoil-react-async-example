@@ -1,6 +1,6 @@
-import React from "react";
-import { useRecoilState, useRecoilStateLoadable } from "recoil";
-import { UserListView } from "./UserListView";
+import {Suspense, MouseEvent as ReactMouseEvent} from "react";
+import { useRecoilState, useRecoilStateLoadable, useRecoilValue } from "recoil";
+import { UserErrorBoundary, UserListView } from "./";
 import { selectedUserEmailState, userListState } from "../state";
 
 /**
@@ -9,18 +9,19 @@ import { selectedUserEmailState, userListState } from "../state";
  */
 export function UserList() {
   const [usersData, setUserState] = useRecoilStateLoadable(userListState);
+  const users = useRecoilValue(userListState);
   const [selectedUserEmail, setSelectedUserEmail] = useRecoilState(
     selectedUserEmailState
   );
 
   const handleUserClick = (email?: string) => (
-    event: React.MouseEvent<HTMLElement, MouseEvent>
+    event: ReactMouseEvent<HTMLElement, MouseEvent>
   ) => {
     const selectedEmail = email || "";
-    // console.log("handleUserClick", selectedEmail);
     setSelectedUserEmail(selectedEmail);
   };
 
+  /*
   if (usersData.state === "hasError") {
     return <div> There is some problem! </div>;
   }
@@ -31,14 +32,35 @@ export function UserList() {
 
   if (usersData.state === "hasValue") {
     return (
-      <>
-        <UserListView
-          users={usersData.contents}
-          handleUserClick={handleUserClick}
-        />
-      </>
+      <UserErrorBoundary>
+        <Suspense fallback={<>loading...</>}>
+          <UserListView
+            users={usersData.contents}
+            handleUserClick={handleUserClick}
+          />
+        </Suspense>
+      </UserErrorBoundary>
     );
   }
 
   return <div>No results...</div>;
+  */
+
+  return (
+    
+        <UserListView
+          users={users}
+          handleUserClick={handleUserClick}
+        />
+    
+  );
+}
+export default function UserListContainer(){
+  return (
+    <UserErrorBoundary>
+      <Suspense fallback={<>loading...</>}>
+        <UserList />
+      </Suspense>
+    </UserErrorBoundary>
+  );
 }
