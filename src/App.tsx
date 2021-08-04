@@ -6,6 +6,9 @@ export default function App() {
   return (
     <RecoilRoot>
       <div className="App">
+        <a href="https://javascript.plainenglish.io/getting-to-know-recoil-initializing-and-maintaining-react-application-state-with-asynchronous-c5c3eb114c39">
+          See Blog
+        </a>
         <h1>Dynamic React Application State</h1>
         <h2>with Recoil / TypeScript</h2>
         <hr />
